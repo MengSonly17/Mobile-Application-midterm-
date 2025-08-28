@@ -1,0 +1,59 @@
+name: pos_mobile
+description: A new Flutter project for POS mobile application.
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # iOS-style icons
+  cupertino_icons: ^1.0.8
+
+  # Native splash screen package
+  flutter_native_splash: ^2.4.0
+  google_fonts: ^6.3.0
+
+  # Hex color helper
+  hexcolor: ^3.0.1   # <-- Added this
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # App icon generator (only in dev_dependencies)
+  flutter_launcher_icons: ^0.14.4
+
+  # Recommended lint rules
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/loading.png
+    - assets/images/pos_logo.png
+    - assets/images/facebook_icon.png
+    - assets/images/google_icon.png
+    - assets/images/google.png
+    - assets/images/login.png
+    - assets/images/register.png
+
+# Native splash screen config
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/images/loading.png
+  android: true
+  ios: true
+  web:
+    generate: false
+
+# App launcher icons config
+flutter_icons:
+  android: true
+  ios: true
+  image_path: assets/images/pos_logo.png
