@@ -95,19 +95,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _register() {
-  if (_isFormValid()) {
-    // Store values in static variables
-    UserData.fullName = _nameController.text;
-    UserData.email = _emailController.text;
-    UserData.password = _passwordController.text;
-    UserData.confirmpassword = _confirmPasswordController.text;
+    if (_isFormValid()) {
+      // Store values in static variables
+      UserData.fullName = _nameController.text;
+      UserData.email = _emailController.text;
+      UserData.password = _passwordController.text;
+      UserData.confirmpassword = _confirmPasswordController.text;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Registered Successfully!")),
-    );
-    Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Registered Successfully!")),
+      );
+      Navigator.pop(context);
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {

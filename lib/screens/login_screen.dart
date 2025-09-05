@@ -20,8 +20,49 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
+  String? _emailError;
+  String? _passwordError;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Listen to changes and validate in real-time
+    _emailController.addListener(() {
+      setState(() {
+        _emailError = _validateEmail(_emailController.text);
+      });
+    });
+
+    _passwordController.addListener(() {
+      setState(() {
+        _passwordError = _validatePassword(_passwordController.text);
+      });
+    });
+  }
+
+  String? _validateEmail(String value) {
+    if (value.isEmpty) return "Email is required";
+    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) return "Enter a valid email";
+    return null;
+  }
+
+  String? _validatePassword(String value) {
+    if (value.isEmpty) return "Password is required";
+    if (value.length < 8) return "Minimum 8 characters required";
+    if (!RegExp(r'[A-Z]').hasMatch(value)) return "Must contain at least 1 uppercase letter";
+    if (!RegExp(r'\d').hasMatch(value)) return "Must contain at least 1 number";
+    if (!RegExp(r'[!@#\$&*~]').hasMatch(value)) return "Must contain at least 1 special character (!@#\$&*~)";
+    return null;
+  }
+
+  bool _isFormValid() {
+    return _validateEmail(_emailController.text) == null &&
+        _validatePassword(_passwordController.text) == null;
+  }
+
   void _login() {
-    if (_formKey.currentState!.validate()) {
+    if (_isFormValid()) {
       if (_emailController.text == AppUser.email &&
           _passwordController.text == AppUser.password) {
         Navigator.pushReplacement(
@@ -49,13 +90,12 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 Center(
                   child: Image.asset(
-                    "assets/images/login.png", // 👈 path must be a string
-                    height: 200,               // optional: set height
-                    fit: BoxFit.cover,         // optional: scale image
+                    "assets/images/login.png",
+                    height: 200,
+                    fit: BoxFit.cover,
                   ),
                 ),
                 const SizedBox(height: 10),
-                // Welcome text
                 const Text(
                   "Welcome back!",
                   style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
@@ -67,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 30),
 
-                // Email Field
+                // ✅ Email Field with real-time error
                 TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -76,20 +116,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    errorText: _emailError, // 👈 real-time error here
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Email is required";
-                    } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
-                        .hasMatch(value)) {
-                      return "Enter a valid email";
-                    }
-                    return null;
-                  },
                 ),
                 const SizedBox(height: 15),
 
-                // Password Field
+                // ✅ Password Field with real-time error
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,
@@ -109,26 +141,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    errorText: _passwordError, // 👈 real-time error here
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Password is required";
-                    } else if (value.length < 8) {
-                      return "Minimum 8 characters required";
-                    } else if (!RegExp(r'^(?=.*[A-Z])').hasMatch(value)) {
-                      return "Must contain at least 1 uppercase letter";
-                    } else if (!RegExp(r'^(?=.*\d)').hasMatch(value)) {
-                      return "Must contain at least 1 number";
-                    } else if (!RegExp(r'^(?=.*[!@#\$&*~])').hasMatch(value)) {
-                      return "Must contain at least 1 special character (!@#\$&*~)";
-                    }
-                    return null;
-                  },
-
                 ),
                 const SizedBox(height: 10),
 
-                // Forgot password link
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -138,7 +155,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 15),
 
-                // Sign In Button
                 SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -158,7 +174,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Divider
                 Row(
                   children: const [
                     Expanded(child: Divider()),
@@ -171,13 +186,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Google Sign Up Button
                 SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: OutlinedButton.icon(
                     icon: Image.asset(
-                      "assets/images/google.png", // 👈 Google images
+                      "assets/images/google.png",
                       height: 24,
                     ),
                     label: const Text(
@@ -194,7 +208,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Sign Up link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -221,4 +234,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
